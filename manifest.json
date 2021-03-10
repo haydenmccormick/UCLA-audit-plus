@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "UCLA Audit+",
+    "version": "0.0.1",
+    "description": "Improves readability and useability of UCLA degree audit.",
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "css": [
+                "default.css"
+            ],
+            "js": [
+                "jquery-3.6.0.js",
+                "content.js"
+            ],
+            "matches": [
+                "https://dars.ucla.edu/selfservice/audit/*"
+            ]
+        }
+    ]
+}
