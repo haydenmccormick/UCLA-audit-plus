@@ -33,28 +33,51 @@ $(".fromcourselist.subreq").each(function () {
             "notop" : "op");
         if (pres != "op" && prev != "op" && next != "op") {
             $(this)[0].classList.add(pres);
+            $(this)[0].classList.add("notop");
             if (!classes.includes(pres))
                 classes.push(pres);
         }
         if (next == "op") {
             $(this)[0].classList.add(ands);
+            $(this)[0].classList.add(pres);
             courses.eq(i + 1)[0].classList.add(ands);
             if (!ops.includes(ands))
                 ops.push(ands);
         }
         if (prev == "op") {
             $(this)[0].classList.add(ands);
+            $(this)[0].classList.add(pres);
             if (i != courses.length - 1 && next != "op") {
                 ands++;
             }
         }
+        if (pres == "op") {
+            if (prev == courses.eq(i + 1)[0].attributes.department.nodeValue.replace(/[^A-Za-z]/g, "")) {
+                $(this)[0].classList.add(prev);
+            }
+            else
+                $(this)[0].classList.add("bigAnd");
+        }
         prev = pres;
     });
     for (let i = 0; i < classes.length; i++) {
-        $(".course.draggable." + classes[i], this).wrapAll(`<div class="classblock"><div class="classitems"></div></div>`);
+        $(".course.draggable.notop." + classes[i], this).wrapAll(`<div class="classblock"><div class="classitems"></div></div>`);
     }
     for (let i = 0; i < ops.length; i++) {
-        $(".course.draggable." + ops[i], this).wrapAll(`<div class="classblock"><div class="classitems2"></div></div>`);
+        classes = [];
+        $(".course.draggable." + ops[i], this)
+            .wrapAll(`<div class="classblock"></div>`)
+            .each(function () {
+                if (!$(this)[0].classList.contains("and")) {
+                    let pres = $(this)[0].attributes.department.nodeValue.replace(/[^A-Za-z]/g, "");
+                    if (!classes.includes(pres))
+                        classes.push(pres);
+                }
+            });
+        for (let j = 0; j < classes.length; j++) {
+            $(".course.draggable." + i + "." + classes[j], this).wrapAll(`<div class="classitems"></div>`);
+        }
+        console.log("---------");
     }
 });
 
@@ -64,6 +87,7 @@ $(".classitems").each(function () {
         if (!$(this)[0].classList.contains("and"))
             $(this)[0].textContent = $(this)[0].attributes.number.nodeValue;
     });
+    $(this).wrap(`<div class=deptblock></div>`);
     $(this).before(`<h5 class="dept">` + $(this)[0].childNodes[0].attributes.department.nodeValue + `</h5>`);
 });
 $(".classitems2").each(function () {

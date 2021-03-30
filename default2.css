@@ -4,12 +4,17 @@
     padding: 9px;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
     max-width: 585px !important;
 }
 
 .course.draggable.not a{
     color: grey !important;
+}
+
+.bigAnd{
+    align-self: center;
+    margin-top: 38px !important;
 }
 
 .subreq {
