@@ -1,46 +1,86 @@
-var class2 = document.getElementsByTagName("tr");
+// Fix issue of "not from" courses not being given class "draggable"
+$("span.course").not(".draggable").addClass("draggable not");
+
 var cl = [];
 var counter = 0;
 var subreqcounter = 0;
-// Find td wrappers, remove commas
-for (let i = 0; i < class2.length; i++) {
-    if (class2[i].outerHTML.startsWith("<tr><td><span")) {
-        if (class2[i].previousSibling == null)
-            subreqcounter++;
-        class2[i].classList.add("subreq");
-        class2[i].classList.add(subreqcounter);
-        class2[i].innerHTML = class2[i].innerHTML.replace(/,/g, " ");
-        class2[i].innerHTML = class2[i].innerHTML.replace(/ &amp; /g, `<span class="course draggable and">&</span>`);
-        class2[i].innerHTML = class2[i].innerHTML.replace(/ or; /g, `<span class="course draggable and">or</span>`);
+// Remove commas, preserve "&" etc.
+$("tr > td.fromcourselist").each(function () {
+    if ($(this)[0].previousSibling == null)
+        subreqcounter++;
+    $(this)[0].classList.add("subreq");
+    $(this)[0].classList.add(subreqcounter);
+    $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/,/g, " ");
+    $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/> *&amp;/g, `><span class="course draggable and"> & </span>`);
+    $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/> *OR/g, `><span class="course draggable and"> OR </span>`);
+    $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/> *\(OR\)/g, `><span class="course draggable and"> (OR) </span>`);
+    $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/> *TO/g, `><span class="course draggable and to"> TO </span>`);
+});
+
+// Categorize
+$(".fromcourselist.subreq").each(function () {
+    var prev = "";
+    var classes = [];
+    var courses = $(".course.draggable", this);
+    var ands = 0;
+    var ops = [];
+    courses.each(function (i) {
+        $(this)[0].style.display = "inline-block";
+        let pres = ($(this)[0].classList.contains("and") ?
+            "op" : $(this)[0].attributes.department.nodeValue.replace(/[^A-Za-z]/g, ""));
+        let next = (i == courses.length - 1 ||
+            !courses.eq(i + 1)[0].classList.contains("and") ?
+            "notop" : "op");
+        if (pres != "op" && prev != "op" && next != "op") {
+            $(this)[0].classList.add(pres);
+            if (!classes.includes(pres))
+                classes.push(pres);
+        }
+        if (next == "op") {
+            $(this)[0].classList.add(ands);
+            courses.eq(i + 1)[0].classList.add(ands);
+            if (!ops.includes(ands))
+                ops.push(ands);
+        }
+        if (prev == "op") {
+            $(this)[0].classList.add(ands);
+            if (i != courses.length - 1 && next != "op") {
+                ands++;
+            }
+        }
+        prev = pres;
+    });
+    for (let i = 0; i < classes.length; i++) {
+        $(".course.draggable." + classes[i], this).wrapAll(`<div class="classblock"><div class="classitems"></div></div>`);
     }
-}
-var prev = "";
-var classes = document.getElementsByClassName("course draggable");
-// Find start and end, format
-for (let i = 0; i < classes.length; i++) {
-    classes[i].style.display = "inline-block";
-    let pres = (classes[i].textContent != '&' && classes[i].textContent != 'or') ? classes[i].attributes.department.nodeValue : "op"
-    if ((classes[i].previousSibling == null || classes[i].previousSibling.data == "  ") && (prev == "" || pres != prev)) {
-        console.log(classes[i]);
-        counter++;
-        classes[i].classList.add("first");
-        classes[i].innerText = classes[i].attributes.number.nodeValue;
+    for (let i = 0; i < ops.length; i++) {
+        $(".course.draggable." + ops[i], this).wrapAll(`<div class="classblock"><div class="classitems2"></div></div>`);
     }
-    if (pres == prev)
-        classes[i].innerText = classes[i].attributes.number.nodeValue;
-    if (classes[i].nextSibling == null || classes[i].nextSibling.data == "  ") {
-        classes[i].classList.add("last");
-        prev = "";
-    }
-    else
-        prev = pres
-    classes[i].classList.add(counter);
-}
+});
 
 // Create class blocks
-for (let i = 1; i <= counter; i++) {
-    $(".course." + i).wrapAll(`<div class="classblock"><div class="classitems"></div></div>`);
-}
 $(".classitems").each(function () {
+    $(".course", this).each(function () {
+        if (!$(this)[0].classList.contains("and"))
+            $(this)[0].textContent = $(this)[0].attributes.number.nodeValue;
+    });
     $(this).before(`<h5 class="dept">` + $(this)[0].childNodes[0].attributes.department.nodeValue + `</h5>`);
 });
+$(".classitems2").each(function () {
+    $(".course", this).each(function () {
+        if (!$(this)[0].classList.contains("and"))
+            $(this)[0].textContent = $(this)[0].attributes.department.nodeValue + " " + $(this)[0].attributes.number.nodeValue;
+    });
+});
+
+$('.subreq').html(function (index, html) {
+    return html.replace(/<td>             <\/td>/, '');
+});
+
+// Cleaning up
+// $(".course.draggable.and.to").each(function () {
+//     $(this)[0].nextSibling.textContent = $(this)[0].nextSibling.attributes.number.nodeValue.replace(/#/, '');
+// })
+// $(".course.draggable").each(function () {
+//     $(this)[0].textContent = $(this)[0].textContent.replace(/\*/, '');
+// })

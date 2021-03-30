@@ -1,0 +1,58 @@
+.classblock {
+    background-color: #eee;
+    margin-bottom: 10px;
+    padding: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 585px !important;
+}
+
+.course.draggable.not a{
+    color: grey !important;
+}
+
+.subreq {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+}
+
+.subreq td {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    box-sizing: unset;
+}
+
+.courselink {
+    display: inline-block;
+    background-color: #d9d9d9 !important;
+    border-radius: 5px;
+    min-width: 55px;
+    height: 55px;
+    font-size: 120%;
+    margin: 3px;
+    margin-bottom: 3 px !important;
+    margin-top: 3 px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none !important;
+    z-index: 3;
+    padding: 3px;
+}
+
+.course.draggable a:hover {
+  background-color: #003b5b !important;
+  color: white !important;
+}
+
+.dept {
+    padding-left: 6px !important;
+}
+
+.classitems2 a{
+    margin: 5px !important;
+    padding: 10px !important;
+}

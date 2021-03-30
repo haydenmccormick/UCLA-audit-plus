@@ -8,14 +8,21 @@
         "48": "icon.png",
         "128": "icon.png"
     },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "storage"
+    ],
     "content_scripts": [
         {
             "css": [
-                "default.css"
+                "default2.css"
             ],
             "js": [
                 "jquery-3.6.0.js",
-                "content.js"
+                "content.js",
+                "button.js"
             ],
             "matches": [
                 "https://dars.ucla.edu/selfservice/audit/*"
