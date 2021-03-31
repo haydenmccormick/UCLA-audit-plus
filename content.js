@@ -24,7 +24,7 @@ $(".fromcourselist.subreq tbody").each(function () {
         for (let i = 0; i < $(this)[0].childElementCount * 2; i += 2) {
             if (($(this)[0]).childNodes[i].firstChild.firstChild.data != "  ") {
                 split++;
-                let newNode = document.createElement("h5");
+                let newNode = document.createElement("h4");
                 newNode.classList.add("catHeader");
                 newNode.appendChild(($(this)[0]).childNodes[i].firstChild.firstChild);
                 ($(this)[0]).childNodes[i].firstChild.insertBefore(newNode, ($(this)[0]).childNodes[i].firstChild.firstChild);
