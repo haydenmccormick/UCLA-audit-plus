@@ -27,7 +27,7 @@ $(".fromcourselist.subreq tbody").each(function () {
                 let newNode = document.createElement("h5");
                 newNode.classList.add("catHeader");
                 newNode.appendChild(($(this)[0]).childNodes[i].firstChild.firstChild);
-                ($(this)[0]).childNodes[i].firstChild.replaceChild(newNode, ($(this)[0]).childNodes[i].firstChild.firstChild);
+                ($(this)[0]).childNodes[i].firstChild.insertBefore(newNode, ($(this)[0]).childNodes[i].firstChild.firstChild);
             }
             ($(this)[0]).childNodes[i].classList.add(split);
         }
@@ -106,26 +106,12 @@ $(".cat").each(function () {
 $(".classitems").each(function () {
     $(".course", this).each(function () {
         if (!$(this)[0].classList.contains("and"))
-            $(this)[0].textContent = $(this)[0].attributes.number.nodeValue;
+            $(this)[0].textContent = $(this)[0].attributes.number.nodeValue.replace(/[ *#]/g, '');
     });
     $(this).wrap(`<div class=deptblock></div>`);
     $(this).before(`<h5 class="dept">` + $(this)[0].childNodes[0].attributes.department.nodeValue + `</h5>`);
-});
-$(".classitems2").each(function () {
-    $(".course", this).each(function () {
-        if (!$(this)[0].classList.contains("and"))
-            $(this)[0].textContent = $(this)[0].attributes.department.nodeValue + " " + $(this)[0].attributes.number.nodeValue;
-    });
 });
 
 $('.subreq').html(function (index, html) {
     return html.replace(/<td>             <\/td>/, '');
 });
-
-// Cleaning up
-// $(".course.draggable.and.to").each(function () {
-//     $(this)[0].nextSibling.textContent = $(this)[0].nextSibling.attributes.number.nodeValue.replace(/#/, '');
-// })
-// $(".course.draggable").each(function () {
-//     $(this)[0].textContent = $(this)[0].textContent.replace(/\*/, '');
-// })
