@@ -12,6 +12,10 @@
     color: grey !important;
 }
 
+.catHeader {
+    color: #003b5b;
+}
+
 .bigAnd{
     align-self: center;
     margin-top: 38px !important;

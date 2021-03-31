@@ -17,8 +17,30 @@ $("tr > td.fromcourselist").each(function () {
     $(this)[0].innerHTML = $(this)[0].innerHTML.replace(/> *TO/g, `><span class="course draggable and to"> TO </span>`);
 });
 
-// Categorize
-$(".fromcourselist.subreq").each(function () {
+// Split up categories
+$(".fromcourselist.subreq tbody").each(function () {
+    var split = 0;
+    if ($(this)[0].firstChild.firstChild.firstChild.nodeName == "#text") {
+        for (let i = 0; i < $(this)[0].childElementCount * 2; i += 2) {
+            if (($(this)[0]).childNodes[i].firstChild.firstChild.data != "  ") {
+                split++;
+                let newNode = document.createElement("h5");
+                newNode.classList.add("catHeader");
+                newNode.appendChild(($(this)[0]).childNodes[i].firstChild.firstChild);
+                ($(this)[0]).childNodes[i].firstChild.replaceChild(newNode, ($(this)[0]).childNodes[i].firstChild.firstChild);
+            }
+            ($(this)[0]).childNodes[i].classList.add(split);
+        }
+    }
+    else
+        $(this)[0].classList.add("cat");
+    for (let i = 1; i <= split; i++) {
+        $("." + i, this).wrapAll(`<div class="cat"></div>`);
+    }
+});
+
+// Format
+$(".cat").each(function () {
     var prev = "";
     var classes = [];
     var courses = $(".course.draggable", this);
@@ -77,7 +99,6 @@ $(".fromcourselist.subreq").each(function () {
         for (let j = 0; j < classes.length; j++) {
             $(".course.draggable." + i + "." + classes[j], this).wrapAll(`<div class="classitems"></div>`);
         }
-        console.log("---------");
     }
 });
 
